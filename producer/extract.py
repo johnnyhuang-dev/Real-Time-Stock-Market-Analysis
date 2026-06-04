@@ -1,18 +1,33 @@
 import requests
+from config import logger, headers, url
 
-url = "https://alpha-vantage.p.rapidapi.com/query"
+def connect_to_api():
 
-querystring = {"function":"TIME_SERIES_DAILY",
-               "symbol":"MSFT",
+    stocks = ['TSLA', 'MSFT', 'GOOGL']
+
+    json_response = []
+
+    for stock in range(0, len(stocks)):
+
+        querystring = {"function":"TIME_SERIES_DAILY",
+               "symbol":f"{stocks[stock]}",
                "outputsize":"compact",
+               "interval":"5min",
                "datatype":"json"}
 
-headers = {
-	"x-rapidapi-key": "db137e4c80mshf1f73668cc6516dp130320jsnc9a95dff1130",
-	"x-rapidapi-host": "alpha-vantage.p.rapidapi.com",
-	"Content-Type": "application/json"
-}
+        try: 
+            response = requests.get(url, headers=headers, params=querystring)
 
-response = requests.get(url, headers=headers, params=querystring)
+            response.raise_for_status()
 
-print(response.json())
+            data = response.json()
+            
+            logger.info("Stocks successfully loaded")
+
+            json_response.append(data)
+
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Error on stock {e}")
+            break
+
+
