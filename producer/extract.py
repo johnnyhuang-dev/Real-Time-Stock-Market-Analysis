@@ -9,7 +9,7 @@ def connect_to_api():
 
     for stock in range(0, len(stocks)):
 
-        querystring = {"function":"TIME_SERIES_DAILY",
+        querystring = {"function":"TIME_SERIES_INTRADAY",
                "symbol":f"{stocks[stock]}",
                "outputsize":"compact",
                "interval":"5min",
@@ -22,31 +22,48 @@ def connect_to_api():
 
             data = response.json()
             
-            logger.info("Stocks successfully loaded")
+            logger.info(f"Stocks {stocks[stock]} successfully loaded")
 
             json_response.append(data)
 
         except requests.exceptions.RequestException as e:
             logger.error(f"Error on stock {e}")
             break
+    
+    return json_response
 
 def extract_json(response):
 
     records = []
 
     for data in response:
-        symbol = data['Meta Data']['2. Symbol']
 
-        for date_str, metrics in data['Time Series (5min)'].items():
-            record = {
-                "symbol":symbol,
-                "data":date_str,
-                "open":metrics["1. open"],
-                "close":metrics["4. close"],
-                "high":metrics["2. high"],
-                "low":metrics["3. low"]
-            }
+        # Check if the response contains the actual stock data or an error message
+        if 'Meta Data' not in data:
+            if 'Information' in data:
+                print(f"API Warning: {data['Information']}")
+            elif 'Note' in data:
+                print(f"API Warning (Call limit reached): {data['Note']}")
+            else:
+                print("Unknown API response format received.")
+            continue  # Skip this item and move to the next stock
 
-            records.append(record)
+        try:
+            symbol = data['Meta Data']['2. Symbol']
+
+            for date_str, metrics in data['Time Series (5min)'].items():
+                record = {
+                    "symbol":symbol,
+                    "date":date_str,
+                    "open":metrics["1. open"],
+                    "close":metrics["4. close"],
+                    "high":metrics["2. high"],
+                    "low":metrics["3. low"]
+                }
+
+                records.append(record)
+        
+        except KeyError as e:
+            print(f"Unexpected structure for a valid payload: {e}")
     
     return records
