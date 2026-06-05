@@ -30,4 +30,23 @@ def connect_to_api():
             logger.error(f"Error on stock {e}")
             break
 
+def extract_json(response):
 
+    records = []
+
+    for data in response:
+        symbol = data['Meta Data']['2. Symbol']
+
+        for date_str, metrics in data['Time Series (5min)'].items():
+            record = {
+                "symbol":symbol,
+                "data":date_str,
+                "open":metrics["1. open"],
+                "close":metrics["4. close"],
+                "high":metrics["2. high"],
+                "low":metrics["3. low"]
+            }
+
+            records.append(record)
+    
+    return records
