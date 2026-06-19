@@ -9,7 +9,7 @@ volumes:
 networks:
   stock_data:
   monitoring:
- 
+
 services:
   spark-master:
     image: spark:3.5.1-python3              # Use the official Apache Spark image with Python 3 support (v3.5.7)
@@ -96,7 +96,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1 # Replication factor = 1 since single broker
       KAFKA_LOG_RETENTION_HOURS: 168            # Keep messages for 7 days
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0 # No delay before consumer group rebalance
-      CLUSTER_ID: "jbzXiYiPQ8a2ejaWHK4Q3w"      # Unique cluster ID for KRaft mode 
+      CLUSTER_ID: "Dw4MdGdXTbWO61cogHgWfw"      # Unique cluster ID for KRaft mode 
       # generate cluster_id: docker run --rm confluentinc/cp-kafka:7.4.10 kafka-storage random-uuid
       KAFKA_OPTS: "-javaagent:/usr/app/jmx_prometheus_javaagent.jar=7071:/usr/app/prom-jmx-agent-config.yml"
     volumes:
