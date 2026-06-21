@@ -14,4 +14,4 @@ RUN chown -R appuser:appuser /usr/app && \
     chmod 644 /usr/app/jmx_prometheus_javaagent.jar /usr/app/prom-jmx-agent-config.yml
 
 # Switch back to the non-root user provided by Confluent
-USER appuser
+USER appuser 
