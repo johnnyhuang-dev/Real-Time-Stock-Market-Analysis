@@ -1,5 +1,5 @@
 import requests
-from config import logger, headers, url
+from kafka_consumer.config import logger, headers, url
 
 def connect_to_api():
 

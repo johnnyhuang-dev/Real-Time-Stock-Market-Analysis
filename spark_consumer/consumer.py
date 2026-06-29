@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.types import TimestampType
 from pyspark.sql.functions import from_json, col
-from config import postgres_config, checkpoint_dir, kafka_data_schema
+from spark_consumer.config import postgres_config, checkpoint_dir, kafka_data_schema
 from pyspark.sql import DataFrame
 
 # Initialize Spark session
